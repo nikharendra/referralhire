@@ -14,6 +14,8 @@ app.get('/', (req, res) => {
   res.send('ReferralHire backend is running');
 });
 
+app.use('/api/auth', require('./routes/authRoutes'));
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.error('MongoDB connection error:', err));
