@@ -16,6 +16,10 @@ app.get('/', (req, res) => {
 
 app.use('/api/auth', require('./routes/authRoutes'));
 
+app.use('/api/jobs', require('./routes/jobRoutes'));
+
+app.use('/api/referrals', require('./routes/referralRoutes'));
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.error('MongoDB connection error:', err));
