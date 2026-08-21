@@ -74,4 +74,30 @@ router.patch('/:id/status', protect, hrOnly, async (req, res) => {
   }
 });
 
+// PATCH /api/referrals/:id/payout - HR marks the bonus as paid
+router.patch('/:id/payout', protect, hrOnly, async (req, res) => {
+  try {
+    const referral = await Referral.findById(req.params.id);
+
+    if (!referral) {
+      return res.status(404).json({ message: 'Referral not found' });
+    }
+
+    if (referral.status !== 'hired') {
+      return res.status(400).json({ message: 'Bonus can only be paid for hired referrals' });
+    }
+
+    if (referral.bonusPaid) {
+      return res.status(400).json({ message: 'Bonus has already been marked as paid' });
+    }
+
+    referral.bonusPaid = true;
+    await referral.save();
+
+    res.status(200).json(referral);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 module.exports = router;
