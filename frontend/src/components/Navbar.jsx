@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <div className="container flex-between" style={{ height: 64, flexWrap: 'wrap', rowGap: 8 }}>
+      <div className="container flex-between" style={{ minHeight: 64, flexWrap: 'wrap', rowGap: 8 }}>
         <div className="brand">
           <Logo size={32} fontSize={13} />
           <div>

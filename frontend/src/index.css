@@ -12,6 +12,9 @@ body,
   max-width: none;
   width: 100%;
 }
+html, body {
+  overflow-x: hidden;
+}
 
 :root {
   --primary: #4f46e5;
@@ -1016,8 +1019,11 @@ textarea.input:focus {
 /* Notification dropdown - keep it on-screen on narrow phones */
 @media (max-width: 480px) {
   .notif-dropdown {
-    width: calc(100vw - 32px);
-    right: -8px;
+    position: fixed;
+    top: 64px;
+    left: 16px;
+    right: 16px;
+    width: auto;
   }
 }
 
