@@ -23,7 +23,7 @@ export default function Navbar() {
 
   return (
     <header className="navbar">
-      <div className="container flex-between" style={{ height: 64 }}>
+      <div className="container flex-between" style={{ height: 64, flexWrap: 'wrap', rowGap: 8 }}>
         <div className="brand">
           <Logo size={32} fontSize={13} />
           <div>
@@ -33,7 +33,7 @@ export default function Navbar() {
         </div>
 
         {user && (
-          <div className="flex gap-sm" style={{ alignItems: 'center' }}>
+          <div className="flex gap-sm" style={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
             <NotificationBell />
             <span className="role-pill">{user.role === 'hr' ? 'HR Admin' : 'Employee'}</span>
             <span className="text-muted" style={{ color: '#e0e7ff', fontSize: 14 }}>{user.name}</span>

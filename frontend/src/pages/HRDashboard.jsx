@@ -21,7 +21,7 @@ export default function HRDashboard() {
   const [posting, setPosting] = useState(false);
 
   const [refSearch, setRefSearch] = useState('');
-const [refStatus, setRefStatus] = useState('');
+  const [refStatus, setRefStatus] = useState('');
 
   const loadStats = async () => {
     const res = await api.get("/dashboard/stats");
@@ -78,21 +78,20 @@ const [refStatus, setRefStatus] = useState('');
   };
 
   const loadReferralsForJob = async (job) => {
-  setSelectedJob(job);
-  const params = new URLSearchParams();
-  if (refSearch) params.append('search', refSearch);
-  if (refStatus) params.append('status', refStatus);
+    setSelectedJob(job);
+    const params = new URLSearchParams();
+    if (refSearch) params.append('search', refSearch);
+    if (refStatus) params.append('status', refStatus);
 
-  const res = await api.get(`/referrals/job/${job._id}?${params.toString()}`);
-  setReferrals(res.data);
-};
+    const res = await api.get(`/referrals/job/${job._id}?${params.toString()}`);
+    setReferrals(res.data);
+  };
 
-useEffect(() => {
-  if (selectedJob) {
-    loadReferralsForJob(selectedJob);
-  }
-}, [refSearch, refStatus]);
-
+  useEffect(() => {
+    if (selectedJob) {
+      loadReferralsForJob(selectedJob);
+    }
+  }, [refSearch, refStatus]);
 
   const handleStatusChange = async (referralId, status) => {
     await api.patch(`/referrals/${referralId}/status`, { status });
@@ -115,9 +114,15 @@ useEffect(() => {
           Manage job postings and track referrals.
         </p>
 
-        {/* Stats */}
+        {/* Stats - responsive auto-fit grid, NOT the two-col-layout class */}
         {stats && (
-          <div className="two-col-layout" style={{ marginBottom: 32 }}>
+          <div
+            className="grid"
+            style={{
+              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+              marginBottom: 32,
+            }}
+          >
             <StatCard
               label="Open Positions"
               value={stats.openPositions}
@@ -141,15 +146,9 @@ useEffect(() => {
           </div>
         )}
 
-        {/* Post job + job list */}
-        <div
-          className="grid"
-          style={{
-            gridTemplateColumns: "360px 1fr",
-            alignItems: "start",
-            marginBottom: 32,
-          }}
-        >
+        {/* Post job + job list - uses the two-col-layout class so it can
+            collapse to a single column on mobile via the CSS media query */}
+        <div className="two-col-layout" style={{ marginBottom: 32 }}>
           <div className="card">
             <h3>Post a Job</h3>
             <form onSubmit={handleCreateJob}>
@@ -226,7 +225,7 @@ useEffect(() => {
                   <div
                     key={job._id}
                     className="card flex-between"
-                    style={{ padding: "16px 20px" }}
+                    style={{ padding: "16px 20px", flexWrap: "wrap", gap: 10 }}
                   >
                     <div>
                       <div style={{ fontWeight: 700 }}>{job.title}</div>
@@ -260,21 +259,21 @@ useEffect(() => {
           <div>
             <h3>Referrals — {selectedJob.title}</h3>
             <div className="filter-bar">
-  <input
-    className="input"
-    placeholder="Search by candidate name..."
-    value={refSearch}
-    onChange={(e) => setRefSearch(e.target.value)}
-  />
-  <select className="input" value={refStatus} onChange={(e) => setRefStatus(e.target.value)}>
-    <option value="">All Statuses</option>
-    <option value="submitted">Submitted</option>
-    <option value="under_review">Under Review</option>
-    <option value="interview">Interview</option>
-    <option value="hired">Hired</option>
-    <option value="rejected">Rejected</option>
-  </select>
-</div>
+              <input
+                className="input"
+                placeholder="Search by candidate name..."
+                value={refSearch}
+                onChange={(e) => setRefSearch(e.target.value)}
+              />
+              <select className="input" value={refStatus} onChange={(e) => setRefStatus(e.target.value)}>
+                <option value="">All Statuses</option>
+                <option value="submitted">Submitted</option>
+                <option value="under_review">Under Review</option>
+                <option value="interview">Interview</option>
+                <option value="hired">Hired</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
             {referrals.length === 0 ? (
               <div className="card text-muted">
                 No referrals for this job yet.
@@ -300,7 +299,7 @@ useEffect(() => {
                     </div>
                     <div
                       className="flex gap-sm"
-                      style={{ alignItems: "center" }}
+                      style={{ alignItems: "center", flexWrap: "wrap" }}
                     >
                       <StatusBadge status={ref.status} />
                       <select
