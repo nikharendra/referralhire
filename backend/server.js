@@ -22,6 +22,10 @@ app.use('/api/referrals', require('./routes/referralRoutes'));
 
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
+app.use('/api/notifications', require('./routes/notificationRoutes'));
+
+app.use('/api/company', require('./routes/companyRoutes'));
+
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected successfully'))
   .catch((err) => console.error('MongoDB connection error:', err));

@@ -20,6 +20,9 @@ export default function HRDashboard() {
   const [loading, setLoading] = useState(true);
   const [posting, setPosting] = useState(false);
 
+  const [refSearch, setRefSearch] = useState('');
+const [refStatus, setRefStatus] = useState('');
+
   const loadStats = async () => {
     const res = await api.get("/dashboard/stats");
     setStats(res.data);
@@ -75,10 +78,21 @@ export default function HRDashboard() {
   };
 
   const loadReferralsForJob = async (job) => {
-    setSelectedJob(job);
-    const res = await api.get(`/referrals/job/${job._id}`);
-    setReferrals(res.data);
-  };
+  setSelectedJob(job);
+  const params = new URLSearchParams();
+  if (refSearch) params.append('search', refSearch);
+  if (refStatus) params.append('status', refStatus);
+
+  const res = await api.get(`/referrals/job/${job._id}?${params.toString()}`);
+  setReferrals(res.data);
+};
+
+useEffect(() => {
+  if (selectedJob) {
+    loadReferralsForJob(selectedJob);
+  }
+}, [refSearch, refStatus]);
+
 
   const handleStatusChange = async (referralId, status) => {
     await api.patch(`/referrals/${referralId}/status`, { status });
@@ -251,6 +265,22 @@ export default function HRDashboard() {
         {selectedJob && (
           <div>
             <h3>Referrals — {selectedJob.title}</h3>
+            <div className="filter-bar">
+  <input
+    className="input"
+    placeholder="Search by candidate name..."
+    value={refSearch}
+    onChange={(e) => setRefSearch(e.target.value)}
+  />
+  <select className="input" value={refStatus} onChange={(e) => setRefStatus(e.target.value)}>
+    <option value="">All Statuses</option>
+    <option value="submitted">Submitted</option>
+    <option value="under_review">Under Review</option>
+    <option value="interview">Interview</option>
+    <option value="hired">Hired</option>
+    <option value="rejected">Rejected</option>
+  </select>
+</div>
             {referrals.length === 0 ? (
               <div className="card text-muted">
                 No referrals for this job yet.

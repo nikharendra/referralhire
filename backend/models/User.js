@@ -21,9 +21,15 @@ const userSchema = new mongoose.Schema({
     enum: ['hr', 'employee'],
     default: 'employee',
   },
-  company: {
+    company: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+  },
+    resetPasswordToken: {
     type: String,
-    default: '',
+  },
+  resetPasswordExpire: {
+    type: Date,
   },
 }, { timestamps: true });
 

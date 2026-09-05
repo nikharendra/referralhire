@@ -12,19 +12,25 @@ export default function EmployeeDashboard() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [search, setSearch] = useState('');
+const [department, setDepartment] = useState('');
 
   const loadData = async () => {
-    setLoading(true);
-    const jobsRes = await api.get('/jobs');
-    setJobs(jobsRes.data);
-    const referralsRes = await api.get('/referrals/my');
-    setMyReferrals(referralsRes.data);
-    setLoading(false);
-  };
+  setLoading(true);
+  const params = new URLSearchParams();
+  if (search) params.append('search', search);
+  if (department) params.append('department', department);
+
+  const jobsRes = await api.get(`/jobs?${params.toString()}`);
+  setJobs(jobsRes.data);
+  const referralsRes = await api.get('/referrals/my');
+  setMyReferrals(referralsRes.data);
+  setLoading(false);
+};
 
   useEffect(() => {
     loadData();
-  }, []);
+  }, [search, department]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,6 +59,20 @@ export default function EmployeeDashboard() {
       <div className="container" style={{ paddingTop: 32, paddingBottom: 20 }}>
         <h1>Open Roles</h1>
         <p className="text-muted" style={{ marginTop: 4, marginBottom: 24 }}>Browse open positions and refer someone you trust.</p>
+        <div className="filter-bar">
+  <input
+    className="input"
+    placeholder="Search by job title..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
+  <select className="input" value={department} onChange={(e) => setDepartment(e.target.value)}>
+    <option value="">All Departments</option>
+    {[...new Set(jobs.map((j) => j.department))].map((dept) => (
+      <option key={dept} value={dept}>{dept}</option>
+    ))}
+  </select>
+</div>
 
         {loading ? (
           <div className="card text-muted">Loading jobs...</div>

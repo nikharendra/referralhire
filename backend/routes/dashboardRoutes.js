@@ -5,15 +5,17 @@ const { protect, hrOnly } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
-// GET /api/dashboard/stats - HR dashboard summary numbers
+// GET /api/dashboard/stats - HR dashboard summary, scoped to their own company
 router.get('/stats', protect, hrOnly, async (req, res) => {
   try {
-    const openPositions = await JobPosting.countDocuments({ status: 'open' });
-    const totalReferrals = await Referral.countDocuments({});
-    const hiredCount = await Referral.countDocuments({ status: 'hired' });
+    const companyId = req.user.company;
+
+    const openPositions = await JobPosting.countDocuments({ status: 'open', company: companyId });
+    const totalReferrals = await Referral.countDocuments({ company: companyId });
+    const hiredCount = await Referral.countDocuments({ status: 'hired', company: companyId });
 
     const pendingPayoutAgg = await Referral.aggregate([
-      { $match: { status: 'hired', bonusPaid: false } },
+      { $match: { status: 'hired', bonusPaid: false, company: companyId } },
       {
         $lookup: {
           from: 'jobpostings',
