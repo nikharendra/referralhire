@@ -117,13 +117,7 @@ useEffect(() => {
 
         {/* Stats */}
         {stats && (
-          <div
-            className="grid"
-            style={{
-              gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
-              marginBottom: 32,
-            }}
-          >
+          <div className="two-col-layout" style={{ marginBottom: 32 }}>
             <StatCard
               label="Open Positions"
               value={stats.openPositions}
